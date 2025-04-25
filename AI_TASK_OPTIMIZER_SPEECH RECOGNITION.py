@@ -11,15 +11,13 @@ from tkinter import filedialog, Label, Button
 import sounddevice as sd
 import soundfile as sf
 
-# Load Pretrained Models
 face_model = load_model('models/facial_emotion_model.h5')
 text_pipeline = pipeline("sentiment-analysis")
 voice_model = load_model('models/voice_emotion_model.h5')
 
-# Emotion Labels
 emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
-# Facial Emotion Recognition
+
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 def predict_face_emotion(image_path):
     img = cv2.imread(image_path)
@@ -33,7 +31,7 @@ def predict_face_emotion(image_path):
         return emotions[np.argmax(prediction)]
     return "No face detected"
 
-# Voice Emotion Detection
+
 def predict_voice_emotion(file_path):
     y, sr = librosa.load(file_path, duration=3, offset=0.5)
     mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
@@ -42,12 +40,12 @@ def predict_voice_emotion(file_path):
     prediction = voice_model.predict(mfcc)
     return emotions[np.argmax(prediction)]
 
-# Text Sentiment Analysis
+
 def predict_text_emotion(text):
     result = text_pipeline(text)[0]
     return result['label']
 
-# GUI Setup
+
 class EmotionGUI:
     def __init__(self, root):
         self.root = root
@@ -91,7 +89,7 @@ class EmotionGUI:
             input_win.destroy()
         tk.Button(input_win, text="Submit", command=process_text).pack()
 
-# Run the GUI
+
 if __name__ == "__main__":
     root = tk.Tk()
     gui = EmotionGUI(root)
